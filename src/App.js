@@ -1,24 +1,51 @@
-import logo from './logo.svg';
-import './App.css';
+import logo from "./logo.svg";
+import "./App.css";
+import Homepage from "./Components/Homepage/Homepage";
+import Menu from "./Components/Menu/Menu";
+import { Route, Routes } from "react-router-dom";
+import LoginRegister from "./Components/Login/LoginRegister";
+import { LoginRegisterContextProvider } from "./Components/Context/LoginRegisterContext";
+import axios from "axios";
+import OwnerProfile from "./Components/OwnerProfile/OwnerProfile";
+import OwnerProfileUpdate from "./Components/OwnerProfileUpdate/OwnerProfileUpdate";
+import RequireAuth from "./Components/utils/RequireAuth/RequireAuth";
 
 function App() {
+  axios.defaults.baseURL = "http://localhost:8080/";
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <Menu></Menu>
+
+      <Routes>
+        <Route path="/" element={<Homepage />}></Route>
+        <Route
+          path="/loginregister"
+          element={
+            <LoginRegisterContextProvider>
+              <LoginRegister></LoginRegister>
+            </LoginRegisterContextProvider>
+          }
+        ></Route>
+        <Route
+          path="/ownerprofile"
+          element={
+            <LoginRegisterContextProvider>
+              <RequireAuth>
+                <OwnerProfile></OwnerProfile>
+              </RequireAuth>
+            </LoginRegisterContextProvider>
+          }
+        ></Route>
+        <Route
+          path="/ownerprofileupdate"
+          element={
+            <RequireAuth>
+              <OwnerProfileUpdate></OwnerProfileUpdate>
+            </RequireAuth>
+          }
+        ></Route>
+      </Routes>
+    </>
   );
 }
 
