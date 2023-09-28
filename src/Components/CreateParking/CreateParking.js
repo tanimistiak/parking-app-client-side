@@ -7,7 +7,7 @@ import LoginRegister from "../Login/LoginRegister";
 import { LoginRegisterContext } from "../Context/LoginRegisterContext";
 
 const CreateParking = () => {
-  const { ip, setIp } = useIp();
+  let { ip, setIp } = useIp();
   const { email } = useContext(LoginRegisterContext);
   const [ipDetails, setIpDetails] = useState(null);
   const {
@@ -21,6 +21,7 @@ const CreateParking = () => {
   useEffect(() => {
     const getIpDetails = async (ip) => {
       console.log(ipDetails);
+      ip = ip.split(",")[0];
       if (ip !== null) {
         await axios
           .get(`https://ipinfo.io/${ip}/json`)
