@@ -4,14 +4,20 @@ import Homepage from "./Components/Homepage/Homepage";
 import Menu from "./Components/Menu/Menu";
 import { Route, Routes } from "react-router-dom";
 import LoginRegister from "./Components/Login/LoginRegister";
-import { LoginRegisterContextProvider } from "./Components/Context/LoginRegisterContext";
+import {
+  LoginRegisterContext,
+  LoginRegisterContextProvider,
+} from "./Components/Context/LoginRegisterContext";
 import axios from "axios";
 import OwnerProfile from "./Components/OwnerProfile/OwnerProfile";
 import OwnerProfileUpdate from "./Components/OwnerProfileUpdate/OwnerProfileUpdate";
 import RequireAuth from "./Components/utils/RequireAuth/RequireAuth";
+import { useContext } from "react";
+import CreateParking from "./Components/CreateParking/CreateParking";
 
 function App() {
-  axios.defaults.baseURL = "http://localhost:8080/";
+  axios.defaults.baseURL = "https://parking-app-server-side.onrender.com/";
+
   return (
     <>
       <Menu></Menu>
@@ -39,9 +45,21 @@ function App() {
         <Route
           path="/ownerprofileupdate"
           element={
-            <RequireAuth>
-              <OwnerProfileUpdate></OwnerProfileUpdate>
-            </RequireAuth>
+            <LoginRegisterContextProvider>
+              <RequireAuth>
+                <OwnerProfileUpdate></OwnerProfileUpdate>
+              </RequireAuth>
+            </LoginRegisterContextProvider>
+          }
+        ></Route>
+        <Route
+          path="/createparking"
+          element={
+            <LoginRegisterContextProvider>
+              <RequireAuth>
+                <CreateParking />
+              </RequireAuth>
+            </LoginRegisterContextProvider>
           }
         ></Route>
       </Routes>

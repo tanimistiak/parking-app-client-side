@@ -10,7 +10,7 @@ const OwnerProfileDashboardHeader = () => {
             <Link to="/ownerprofileupdate">Update Profile</Link>
           </li>
           <li className="p-2 hover:bg-blue-800 transition-all">
-            <a href="#">Create Parking</a>
+            <Link to="/createparking">Create Parking</Link>
           </li>
           <li className="p-2 hover:bg-blue-800 transition-all">
             <a href="#">Parking List</a>

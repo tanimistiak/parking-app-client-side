@@ -16,6 +16,9 @@ const Menu = () => {
             <Link to="/loginregister">
               <li>Login/Register</li>
             </Link>
+            <Link to="/ownerprofile">
+              <li>Owner Profile</li>
+            </Link>
             <li>Rent</li>
           </ul>
         </div>

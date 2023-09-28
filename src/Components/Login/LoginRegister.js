@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { LoginRegisterContext } from "../Context/LoginRegisterContext.js";
 import OwnerProfile from "../OwnerProfile/OwnerProfile.js";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -9,6 +9,7 @@ const LoginRegister = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [status, setStatus] = useState("login");
+
   const {
     setEmail: setLoggedEmail,
     setId,
@@ -40,16 +41,15 @@ const LoginRegister = () => {
       .then((res) => {
         setLoggedEmail(res.data.email);
         setId(res.data.id);
+        navigate(from, { replace: true });
       })
       .catch((err) => console.log(err));
-    navigate(from, { replace: true });
   };
   if (loggedEmail) {
     navigate("/ownerprofile");
   }
-  /*  const handleRegisterOrLogin = (value) => {
-    setStatus(value);
-  }; */
+  console.log(loggedEmail);
+
   return (
     <div>
       <section className="form">

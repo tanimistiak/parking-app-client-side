@@ -1,6 +1,7 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import axios from "axios";
 import React, { createContext, useEffect, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 
 export const LoginRegisterContext = createContext({});
 export function LoginRegisterContextProvider({ children }) {
@@ -8,8 +9,12 @@ export function LoginRegisterContextProvider({ children }) {
   const [email, setEmail] = useState(null);
   const [password, setPassword] = useState(null);
   const [id, setId] = useState(null);
-
-  console.log(id, email);
+  const [name, setName] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
+  const location = useLocation();
+  let from = location.state?.from?.pathname || "";
+  console.log(id, email, name);
 
   useEffect(() => {
     const fetchOwner = async () => {
@@ -19,13 +24,15 @@ export function LoginRegisterContextProvider({ children }) {
           setEmail(res.data.email);
           setId(res.data._id);
         })
-        .catch((err) => console.log(err));
+        .catch((err) => console.log(err))
+        .finally(() => setLoading(false));
     };
     fetchOwner();
   }, []);
+
   return (
     <LoginRegisterContext.Provider
-      value={{ setEmail, setPassword, setId, id, email }}
+      value={{ setEmail, setPassword, setId, id, email, loading }}
     >
       {children}
     </LoginRegisterContext.Provider>
