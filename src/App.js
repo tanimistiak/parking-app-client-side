@@ -14,9 +14,10 @@ import OwnerProfileUpdate from "./Components/OwnerProfileUpdate/OwnerProfileUpda
 import RequireAuth from "./Components/utils/RequireAuth/RequireAuth";
 import { useContext } from "react";
 import CreateParking from "./Components/CreateParking/CreateParking";
+import ParkingList from "./Components/ParkingList/ParkingList";
 
 function App() {
-  axios.defaults.baseURL = "https://parking-app-server-side.onrender.com/";
+  axios.defaults.baseURL = "http://localhost:8080/";
 
   return (
     <>
@@ -65,6 +66,16 @@ function App() {
             <LoginRegisterContextProvider>
               <RequireAuth>
                 <CreateParking />
+              </RequireAuth>
+            </LoginRegisterContextProvider>
+          }
+        ></Route>
+        <Route
+          path="/parkinglist"
+          element={
+            <LoginRegisterContextProvider>
+              <RequireAuth>
+                <ParkingList></ParkingList>
               </RequireAuth>
             </LoginRegisterContextProvider>
           }
