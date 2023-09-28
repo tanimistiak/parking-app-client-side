@@ -23,7 +23,14 @@ function App() {
       <Menu></Menu>
 
       <Routes>
-        <Route path="/" element={<Homepage />}></Route>
+        <Route
+          path="/"
+          element={
+            <LoginRegisterContextProvider>
+              <Homepage />
+            </LoginRegisterContextProvider>
+          }
+        ></Route>
         <Route
           path="/loginregister"
           element={
