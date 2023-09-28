@@ -17,7 +17,7 @@ import CreateParking from "./Components/CreateParking/CreateParking";
 import ParkingList from "./Components/ParkingList/ParkingList";
 
 function App() {
-  axios.defaults.baseURL = "http://localhost:8080/";
+  axios.defaults.baseURL = "https://parking-app-server-side.onrender.com/";
 
   return (
     <>
