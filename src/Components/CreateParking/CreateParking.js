@@ -30,21 +30,23 @@ const CreateParking = () => {
           .get(`https://ipinfo.io/${ip}/json`)
           .then((res) => setIpDetails(res.data))
           .catch((err) => console.log(err))
-          .finally(() => {
-            setKey("AIzaSyBO8vP9zG-H0Cncs8Qucad9howK_CQyJf4");
-            fromLatLng(
+          .finally(async () => {
+            await setKey("AIzaSyBO8vP9zG-H0Cncs8Qucad9howK_CQyJf4");
+            console.log(ipDetails);
+            await fromLatLng(
               ipDetails?.loc?.split(",")[0],
               ipDetails?.loc?.split(",")[1]
             )
-              .then((res) => {
+              .then(({ results }) => {
                 console.log(
+                  results,
                   ipDetails,
                   ipDetails?.loc?.split(",")[0],
                   ipDetails?.loc?.split(",")[1]
                 );
-                const address = res.results[0].formatted_address;
-                setAddress(address);
-                console.log(address);
+                const { lat, lng } = results[0].geometry.location;
+                // setAddress(address);
+                console.log(lat, lng);
               })
               .catch((error) => {
                 console.error("Error fetching address:", error);
