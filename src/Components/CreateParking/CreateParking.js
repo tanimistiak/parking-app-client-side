@@ -12,7 +12,7 @@ const CreateParking = () => {
   const { email } = useContext(LoginRegisterContext);
   const [ipDetails, setIpDetails] = useState(null);
   const [address, setAddress] = useState("");
-  const [loading, setLoading] = useState(true);
+  // const [loading, setLoading] = useState(true);
   const {
     register,
     handleSubmit,
@@ -44,8 +44,8 @@ const CreateParking = () => {
                   ipDetails?.loc?.split(",")[1]
                 );
                 const { lat, lng } = results[0].geometry.location;
-                // setAddress(address);
-                console.log(lat, lng);
+                setAddress(results[0]);
+                // console.log(lat, lng);
               })
               .catch((error) => {
                 console.error("Error fetching address:", error);
@@ -80,6 +80,9 @@ const CreateParking = () => {
         country: data.country,
         postCode: data.postCode,
         createdBy: email,
+        fullAddress: address,
+        address: address.formatted_address,
+        place_id: address.place_id,
       })
       .then((res) => console.log(res))
       .catch((err) => console.log(err));
@@ -108,7 +111,7 @@ const CreateParking = () => {
           />
           <br />
           <input
-            defaultValue={ipDetails?.loc}
+            defaultValue={address?.formatted_address}
             className="w-80 border border-black mb-5 p-3"
             {...register("parkingLocation", { required: true })}
           />
