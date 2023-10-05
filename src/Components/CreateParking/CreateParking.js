@@ -28,14 +28,13 @@ const CreateParking = () => {
       if (ip) {
         await axios
           .get(`https://ipinfo.io/${ip}/json`)
-          .then((res) => setIpDetails(res.data))
-          .catch((err) => console.log(err))
-          .finally(async () => {
-            await setKey("AIzaSyBO8vP9zG-H0Cncs8Qucad9howK_CQyJf4");
+          .then((res) => {
+            setIpDetails(res.data);
+            setKey("AIzaSyBO8vP9zG-H0Cncs8Qucad9howK_CQyJf4");
             console.log(ipDetails);
-            await fromLatLng(
-              ipDetails?.loc?.split(",")[0],
-              ipDetails?.loc?.split(",")[1]
+            fromLatLng(
+              res.data?.loc?.split(",")[0],
+              res.data?.loc?.split(",")[1]
             )
               .then(({ results }) => {
                 console.log(
@@ -51,12 +50,13 @@ const CreateParking = () => {
               .catch((error) => {
                 console.error("Error fetching address:", error);
               });
-          });
+          })
+          .catch((err) => console.log(err));
       }
     };
     getIpDetails(ip);
   }, [ip]);
-  useEffect(() => {}, [ip, address]);
+
   console.log(address);
   const onSubmit = async (data) => {
     const duration = [];
