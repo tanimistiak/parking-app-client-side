@@ -5,11 +5,14 @@ import axios from "axios";
 import { Controller, get, useForm } from "react-hook-form";
 import LoginRegister from "../Login/LoginRegister";
 import { LoginRegisterContext } from "../Context/LoginRegisterContext";
+import { fromLatLng, geocode, setKey } from "react-geocode";
 
 const CreateParking = () => {
   let { ip, setIp } = useIp();
   const { email } = useContext(LoginRegisterContext);
   const [ipDetails, setIpDetails] = useState(null);
+  const [address, setAddress] = useState("");
+
   const {
     register,
     handleSubmit,
@@ -20,17 +23,33 @@ const CreateParking = () => {
 
   useEffect(() => {
     const getIpDetails = async (ip) => {
-      console.log(ipDetails);
-      ip = ip.split(",")[0];
+      // console.log(ipDetails);
+      ip = ip?.split(",")[0];
       if (ip !== null) {
         await axios
           .get(`https://ipinfo.io/${ip}/json`)
           .then((res) => setIpDetails(res.data))
-          .catch((err) => console.log(err));
+          .catch((err) => console.log(err))
+          .finally(async () => {
+            setKey(process.env.GOOGLE_MAP);
+            await fromLatLng(
+              ipDetails?.loc?.split(",")[0],
+              ipDetails?.loc?.split(",")[1]
+            )
+              .then((res) => {
+                const address = res.results[0].formatted_address;
+                setAddress(address);
+                console.log(address);
+              })
+              .catch((error) => {
+                console.error("Error fetching address:", error);
+              });
+          });
       }
     };
     getIpDetails(ip);
   }, [ip]);
+  console.log(address);
   const onSubmit = async (data) => {
     const duration = [];
     console.log(data);
