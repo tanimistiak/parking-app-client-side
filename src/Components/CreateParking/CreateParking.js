@@ -37,6 +37,11 @@ const CreateParking = () => {
               ipDetails?.loc?.split(",")[1]
             )
               .then((res) => {
+                console.log(
+                  ipDetails,
+                  ipDetails?.loc?.split(",")[0],
+                  ipDetails?.loc?.split(",")[1]
+                );
                 const address = res.results[0].formatted_address;
                 setAddress(address);
                 console.log(address);
