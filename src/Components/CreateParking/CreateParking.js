@@ -12,7 +12,7 @@ const CreateParking = () => {
   const { email } = useContext(LoginRegisterContext);
   const [ipDetails, setIpDetails] = useState(null);
   const [address, setAddress] = useState("");
-
+  const [loading, setLoading] = useState(true);
   const {
     register,
     handleSubmit,
@@ -29,23 +29,27 @@ const CreateParking = () => {
         await axios
           .get(`https://ipinfo.io/${ip}/json`)
           .then((res) => setIpDetails(res.data))
-          .catch((err) => console.log(err));
+          .catch((err) => console.log(err))
+          .finally(() => {
+            setKey("AIzaSyBO8vP9zG-H0Cncs8Qucad9howK_CQyJf4");
+            fromLatLng(
+              ipDetails?.loc?.split(",")[0],
+              ipDetails?.loc?.split(",")[1]
+            )
+              .then((res) => {
+                const address = res.results[0].formatted_address;
+                setAddress(address);
+                console.log(address);
+              })
+              .catch((error) => {
+                console.error("Error fetching address:", error);
+              });
+          });
       }
     };
     getIpDetails(ip);
   }, [ip]);
-  useEffect(() => {
-    setKey(process.env.GOOGLE_MAP);
-    fromLatLng(ipDetails?.loc?.split(",")[0], ipDetails?.loc?.split(",")[1])
-      .then((res) => {
-        const address = res.results[0].formatted_address;
-        setAddress(address);
-        console.log(address);
-      })
-      .catch((error) => {
-        console.error("Error fetching address:", error);
-      });
-  }, [ip, address]);
+  useEffect(() => {}, [ip, address]);
   console.log(address);
   const onSubmit = async (data) => {
     const duration = [];
