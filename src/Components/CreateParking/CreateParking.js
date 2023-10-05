@@ -25,7 +25,7 @@ const CreateParking = () => {
     const getIpDetails = async (ip) => {
       // console.log(ipDetails);
       ip = ip?.split(",")[0];
-      if (ip !== null) {
+      if (ip) {
         await axios
           .get(`https://ipinfo.io/${ip}/json`)
           .then((res) => setIpDetails(res.data))
