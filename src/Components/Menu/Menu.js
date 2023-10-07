@@ -1,12 +1,13 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { UserLoginRegisterContext } from "../Context/UserLoginRegisterContext";
 import axios from "axios";
 
 const Menu = () => {
-  const { image, setImage, imageLoading, email } = useContext(
+  const { image, setImage, imageLoading, email, imageUrlRef } = useContext(
     UserLoginRegisterContext
   );
+
   useEffect(() => {
     const imageFetch = async (email) => {
       if (email) {
@@ -17,9 +18,9 @@ const Menu = () => {
           .then((res) => {
             console.log(res);
             const imageBlob = new Blob([res.data], { type: "image/jpeg" });
-            const imageUrl = URL.createObjectURL(imageBlob);
-            setImage(imageUrl);
-            console.log(imageUrl);
+            imageUrlRef.current = URL.createObjectURL(imageBlob);
+            setImage(imageUrlRef.current);
+            console.log(imageUrlRef.current);
           })
           .catch((err) => console.log(err));
       }
@@ -44,7 +45,7 @@ const Menu = () => {
               <li>Owner Profile</li>
             </Link>
 
-            {image ? (
+            {email ? (
               <li>
                 <img
                   className="w-10 rounded-full"

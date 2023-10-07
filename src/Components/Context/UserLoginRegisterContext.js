@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import axios from "axios";
-import React, { createContext, useEffect, useState } from "react";
+import React, { createContext, useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
 export const UserLoginRegisterContext = createContext({});
@@ -12,6 +12,7 @@ export function UserLoginRegisterContextProvider({ children }) {
   const [id, setId] = useState(null);
   const [name, setName] = useState(null);
   const [loading, setLoading] = useState(true);
+  const imageUrlRef = useRef();
   const [imageLoading, setImageLoading] = useState(true);
   const navigate = useNavigate();
   const location = useLocation();
@@ -47,6 +48,7 @@ export function UserLoginRegisterContextProvider({ children }) {
         setImage,
         imageLoading,
         setImageLoading,
+        imageUrlRef,
       }}
     >
       {children}

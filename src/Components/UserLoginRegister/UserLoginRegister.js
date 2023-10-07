@@ -39,6 +39,23 @@ const UserLoginRegister = () => {
 
     console.log(file);
   };
+
+  const imageFetch = async (email) => {
+    if (email) {
+      await axios
+        .get(`api/v1/publicUsers/retrieveimage/${email}`, {
+          responseType: "arraybuffer",
+        })
+        .then((res) => {
+          console.log(res);
+          const imageBlob = new Blob([res.data], { type: "image/jpeg" });
+          const imageUrl = URL.createObjectURL(imageBlob);
+          setImage(imageUrl);
+        })
+        .catch((err) => console.log(err));
+    }
+  };
+  imageFetch(email);
   const handleRegister = async (event) => {
     event.preventDefault();
     let formData = new FormData();
@@ -73,6 +90,7 @@ const UserLoginRegister = () => {
         setId(userData?.id);
 
         navigate(from, { replace: true });
+        imageFetch(userData?.email);
       })
       .catch((err) => console.log(err));
   };
