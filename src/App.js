@@ -34,9 +34,11 @@ function App() {
         <Route
           path="/"
           element={
-            <LoginRegisterContextProvider>
-              <Homepage />
-            </LoginRegisterContextProvider>
+            <UserLoginRegisterContextProvider>
+              <LoginRegisterContextProvider>
+                <Homepage />
+              </LoginRegisterContextProvider>
+            </UserLoginRegisterContextProvider>
           }
         ></Route>
         <Route
