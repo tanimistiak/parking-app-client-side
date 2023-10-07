@@ -81,8 +81,8 @@ const CreateParking = () => {
         postCode: data.postCode,
         createdBy: email,
         fullAddress: address,
-        address: address.formatted_address,
-        place_id: address.place_id,
+        address: address?.formatted_address,
+        placeId: address?.place_id,
       })
       .then((res) => console.log(res))
       .catch((err) => console.log(err));

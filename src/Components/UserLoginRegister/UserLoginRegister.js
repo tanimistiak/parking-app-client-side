@@ -4,7 +4,6 @@ import { LoginRegisterContext } from "../Context/LoginRegisterContext.js";
 
 import { useLocation, useNavigate } from "react-router-dom";
 import { UserLoginRegisterContext } from "../Context/UserLoginRegisterContext.js";
-import Menu from "../Menu/Menu.js";
 import ProgressBar from "@ramonak/react-progress-bar";
 
 const UserLoginRegister = () => {
@@ -38,9 +37,7 @@ const UserLoginRegister = () => {
 
     console.log(file);
   };
-  const fileId = document.getElementById("file");
-  console.log(fileId);
-  const handleSubmit = async (event) => {
+  const handleRegister = async (event) => {
     event.preventDefault();
     let formData = new FormData();
     formData.append("file", file);
@@ -48,23 +45,17 @@ const UserLoginRegister = () => {
     formData.append("password", password);
     console.log(formData.get("file"));
     await axios
-      .post(
-        status === "register"
-          ? "api/v1/publicUsers/register"
-          : "api/v1/publicUsers/login",
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-          onUploadProgress: (data) => {
-            setProgress(Math.round((100 * data.loaded) / data.total));
-            console.log(progress);
-          },
+      .post("api/v1/publicUsers/register", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+        onUploadProgress: (data) => {
+          setProgress(Math.round((100 * data.loaded) / data.total));
+          console.log(progress);
+        },
 
-          withCredentials: true,
-        }
-      )
+        withCredentials: true,
+      })
       .then((res) => {
         console.log(res);
 
@@ -74,7 +65,25 @@ const UserLoginRegister = () => {
       })
       .catch((err) => console.log(err));
   };
-
+  const handleLogin = async (event) => {
+    event.preventDefault();
+    await axios
+      .post(
+        "api/v1/publicUsers/login",
+        {
+          email: email,
+          password: password,
+        },
+        { withCredentials: true }
+      )
+      .then((res) => {
+        console.log(res);
+        setLoggedEmail(res.data?.email);
+        setId(res.data?.id);
+        navigate(from, { replace: true });
+      })
+      .catch((err) => console.log(err));
+  };
   if (loggedEmail) {
     navigate("/userprofile");
     console.log(image);
@@ -89,49 +98,77 @@ const UserLoginRegister = () => {
         )}
 
         <div className="form flex justify-center">
-          <form onSubmit={handleSubmit} encType="multipart/form-data">
-            <input
-              onChange={handleEmail}
-              type="email"
-              className="border-black border-2 mt-5 w-72 p-3"
-              placeholder="Enter your email"
-              name="email"
-              id="email"
-            />
-            <br />
+          {/* register form */}
+          {status === "register" && (
+            <form onSubmit={handleRegister} encType="multipart/form-data">
+              <input
+                onChange={handleEmail}
+                type="email"
+                className="border-black border-2 mt-5 w-72 p-3"
+                placeholder="Enter your email"
+                name="email"
+                id="email"
+              />
+              <br />
 
-            <input
-              onChange={handlePass}
-              type="password"
-              className="border-black border-2 mt-5 w-72 p-3"
-              placeholder="Enter your password"
-              name="password"
-              id="password"
-            />
-            <br />
-            {status === "register" && (
-              <div>
-                <input
-                  onChange={handleFile}
-                  type="file"
-                  className="border-black border-2 mt-5 w-72 p-3"
-                  required={true}
-                  name="file"
-                  id="file"
-                  accept=".jpg"
-                />
-                {progress && <ProgressBar completed={progress}></ProgressBar>}
-              </div>
-            )}
-            <br />
-            <div className="button flex justify-center bg-blue-600 mt-5 p-3">
-              {status === "login" ? (
-                <button className="">Login</button>
-              ) : (
-                <button className="">Register</button>
+              <input
+                onChange={handlePass}
+                type="password"
+                className="border-black border-2 mt-5 w-72 p-3"
+                placeholder="Enter your password"
+                name="password"
+                id="password"
+              />
+              <br />
+              {status === "register" && (
+                <div>
+                  <input
+                    onChange={handleFile}
+                    type="file"
+                    className="border-black border-2 mt-5 w-72 p-3"
+                    required={true}
+                    name="file"
+                    id="file"
+                    accept=".jpg"
+                  />
+                  {progress && <ProgressBar completed={progress}></ProgressBar>}
+                </div>
               )}
-            </div>
-          </form>
+              <br />
+              <div className="button flex justify-center bg-blue-600 mt-5 p-3">
+                <button className="">Register</button>
+              </div>
+            </form>
+          )}
+
+          {/* login form */}
+
+          {status === "login" && (
+            <form onSubmit={handleLogin}>
+              <input
+                onChange={handleEmail}
+                type="email"
+                className="border-black border-2 mt-5 w-72 p-3"
+                placeholder="Enter your email"
+                name="email"
+                id="email"
+              />
+              <br />
+
+              <input
+                onChange={handlePass}
+                type="password"
+                className="border-black border-2 mt-5 w-72 p-3"
+                placeholder="Enter your password"
+                name="password"
+                id="password"
+              />
+              <br />
+              <div className="button flex justify-center bg-blue-600 mt-5 p-3">
+                <button className="">Login</button>
+              </div>
+            </form>
+          )}
         </div>
 
         {status === "login" ? (
