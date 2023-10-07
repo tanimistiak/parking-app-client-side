@@ -4,9 +4,9 @@ import { UserLoginRegisterContext } from "../Context/UserLoginRegisterContext";
 import axios from "axios";
 
 const Menu = () => {
-  const { email, image, setImage } = useContext(UserLoginRegisterContext);
-  console.log(email, image);
-
+  const { image, setImage, imageLoading, email } = useContext(
+    UserLoginRegisterContext
+  );
   useEffect(() => {
     const imageFetch = async (email) => {
       if (email) {
@@ -26,15 +26,14 @@ const Menu = () => {
     };
     imageFetch(email);
   }, [email]);
-
   return (
     <div className="w-screen bg-black p-5">
-      <menu className="container w-full  text-white m-auto flex justify-between">
+      <menu className="container w-full  text-white m-auto flex justify-between items-start">
         <div className="logo">
           <p>Parking Space</p>
         </div>
         <div className="nav-menu">
-          <ul className="flex gap-5">
+          <ul className="flex gap-5 items-center">
             <Link to="/">
               <li>Home</li>
             </Link>
@@ -44,14 +43,21 @@ const Menu = () => {
             <Link to="/ownerprofile">
               <li>Owner Profile</li>
             </Link>
-            {image && (
+
+            {image ? (
               <li>
-                <img src={image} alt="" srcSet="" />
+                <img
+                  className="w-10 rounded-full"
+                  src={image}
+                  alt=""
+                  srcSet=""
+                />
               </li>
+            ) : (
+              <Link to="/userloginregister">
+                <li>User Login</li>
+              </Link>
             )}
-            <Link to="/userloginregister">
-              <li>User Login</li>
-            </Link>
           </ul>
         </div>
       </menu>

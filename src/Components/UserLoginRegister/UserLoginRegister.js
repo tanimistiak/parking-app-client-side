@@ -20,8 +20,10 @@ const UserLoginRegister = () => {
     setId,
     id,
     email: loggedEmail,
-    image,
+    image: loadedImage,
     setImage,
+
+    setImageLoading,
   } = useContext(UserLoginRegisterContext);
   let from = location.state?.from?.pathname || "";
 
@@ -44,23 +46,32 @@ const UserLoginRegister = () => {
     formData.append("email", email);
     formData.append("password", password);
     console.log(formData.get("file"));
-    await axios
-      .post("api/v1/publicUsers/register", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-        onUploadProgress: (data) => {
-          setProgress(Math.round((100 * data.loaded) / data.total));
-          console.log(progress);
-        },
+    const postUser = await axios.post("api/v1/publicUsers/register", formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+      onUploadProgress: (data) => {
+        setProgress(Math.round((100 * data.loaded) / data.total));
+        console.log(progress);
+      },
 
-        withCredentials: true,
-      })
-      .then((res) => {
-        console.log(res);
+      withCredentials: true,
+    });
+    /* const fileRetrieve = await axios.get(
+      `api/v1/publicUsers/retrieveimage/${email}`,
+      { responseType: "arraybuffer" }
+    ); */
+    Promise.all([postUser])
+      .then(async (responses) => {
+        console.log(responses);
+        const userData = responses[0].data;
+        /*  const fileData = responses[1];
+        const imageBlob = new Blob([fileData.data], { type: "image/jpeg" });
+        const imageUrl = URL.createObjectURL(imageBlob); */
 
-        setLoggedEmail(res.data?.email);
-        setId(res.data?.id);
+        setLoggedEmail(userData?.email);
+        setId(userData?.id);
+
         navigate(from, { replace: true });
       })
       .catch((err) => console.log(err));
@@ -86,7 +97,7 @@ const UserLoginRegister = () => {
   };
   if (loggedEmail) {
     navigate("/userprofile");
-    console.log(image);
+    // console.log(image);
   }
   return (
     <div>

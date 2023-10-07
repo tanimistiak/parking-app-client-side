@@ -12,6 +12,7 @@ export function UserLoginRegisterContextProvider({ children }) {
   const [id, setId] = useState(null);
   const [name, setName] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [imageLoading, setImageLoading] = useState(true);
   const navigate = useNavigate();
   const location = useLocation();
   let from = location.state?.from?.pathname || "";
@@ -44,6 +45,8 @@ export function UserLoginRegisterContextProvider({ children }) {
         loading,
         image,
         setImage,
+        imageLoading,
+        setImageLoading,
       }}
     >
       {children}
