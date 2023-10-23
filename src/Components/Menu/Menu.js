@@ -4,7 +4,7 @@ import { UserLoginRegisterContext } from "../Context/UserLoginRegisterContext";
 import axios from "axios";
 
 const Menu = () => {
-  const { image, setImage, imageLoading, email, imageUrlRef } = useContext(
+  const { image, setImage, imageLoading,setImageLoading, email, imageUrlRef } = useContext(
     UserLoginRegisterContext
   );
 
@@ -40,9 +40,6 @@ const Menu = () => {
             </Link>
             <Link to="/loginregister">
               <li>Owner Login</li>
-            </Link>
-            <Link to="/ownerprofile">
-              <li>Owner Profile</li>
             </Link>
 
             {email ? (

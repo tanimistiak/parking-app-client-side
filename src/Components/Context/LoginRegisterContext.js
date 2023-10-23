@@ -12,8 +12,10 @@ export function LoginRegisterContextProvider({ children }) {
   const [name, setName] = useState(null);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
-  const location = useLocation();
-  let from = location.state?.from?.pathname || "";
+  const [location, setLocation] = useState(null);
+  const [error, setError] = useState(null);
+  // const location = useLocation();
+  // let from = location.state?.from?.pathname || "";
   console.log(id, email, name);
 
   useEffect(() => {
@@ -32,7 +34,16 @@ export function LoginRegisterContextProvider({ children }) {
 
   return (
     <LoginRegisterContext.Provider
-      value={{ setEmail, setPassword, setId, id, email, loading }}
+      value={{
+        setEmail,
+        setPassword,
+        setId,
+        id,
+        email,
+        loading,
+        location,
+        setLocation,
+      }}
     >
       {children}
     </LoginRegisterContext.Provider>

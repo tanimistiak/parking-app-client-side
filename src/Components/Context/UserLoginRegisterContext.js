@@ -13,10 +13,12 @@ export function UserLoginRegisterContextProvider({ children }) {
   const [name, setName] = useState(null);
   const [loading, setLoading] = useState(true);
   const imageUrlRef = useRef();
+  const [location, setLocation] = useState(null);
+  const [error, setError] = useState(null);
   const [imageLoading, setImageLoading] = useState(true);
   const navigate = useNavigate();
-  const location = useLocation();
-  let from = location.state?.from?.pathname || "";
+  /*  const location = useLocation();
+  let from = location.state?.from?.pathname || ""; */
   console.log(id, email, name);
 
   useEffect(() => {
@@ -49,6 +51,8 @@ export function UserLoginRegisterContextProvider({ children }) {
         imageLoading,
         setImageLoading,
         imageUrlRef,
+        location,
+        setLocation,
       }}
     >
       {children}

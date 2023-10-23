@@ -22,7 +22,7 @@ const UserLoginRegister = () => {
     email: loggedEmail,
     image: loadedImage,
     setImage,
-
+    imageLoading,
     setImageLoading,
   } = useContext(UserLoginRegisterContext);
   let from = location.state?.from?.pathname || "";
@@ -36,26 +36,17 @@ const UserLoginRegister = () => {
   };
   const handleFile = (ev) => {
     setFile(ev.target.files[0]);
+    console.log(imageLoading);
+    if (imageLoading) {
+      return <p>Loading...</p>;
+    }
+
+    const imageUrl = URL.createObjectURL(file);
+    setImage(imageUrl);
+    setImageLoading(false);
 
     console.log(file);
   };
-
-  const imageFetch = async (email) => {
-    if (email) {
-      await axios
-        .get(`api/v1/publicUsers/retrieveimage/${email}`, {
-          responseType: "arraybuffer",
-        })
-        .then((res) => {
-          console.log(res);
-          const imageBlob = new Blob([res.data], { type: "image/jpeg" });
-          const imageUrl = URL.createObjectURL(imageBlob);
-          setImage(imageUrl);
-        })
-        .catch((err) => console.log(err));
-    }
-  };
-  imageFetch(email);
   const handleRegister = async (event) => {
     event.preventDefault();
     let formData = new FormData();
@@ -63,34 +54,25 @@ const UserLoginRegister = () => {
     formData.append("email", email);
     formData.append("password", password);
     console.log(formData.get("file"));
-    const postUser = await axios.post("api/v1/publicUsers/register", formData, {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-      onUploadProgress: (data) => {
-        setProgress(Math.round((100 * data.loaded) / data.total));
-        console.log(progress);
-      },
+    await axios
+      .post("api/v1/publicUsers/register", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+        onUploadProgress: (data) => {
+          setProgress(Math.round((100 * data.loaded) / data.total));
+          console.log(progress);
+        },
 
-      withCredentials: true,
-    });
-    /* const fileRetrieve = await axios.get(
-      `api/v1/publicUsers/retrieveimage/${email}`,
-      { responseType: "arraybuffer" }
-    ); */
-    Promise.all([postUser])
-      .then(async (responses) => {
+        withCredentials: true,
+      })
+
+      .then((responses) => {
         console.log(responses);
-        const userData = responses[0].data;
-        /*  const fileData = responses[1];
-        const imageBlob = new Blob([fileData.data], { type: "image/jpeg" });
-        const imageUrl = URL.createObjectURL(imageBlob); */
-
-        setLoggedEmail(userData?.email);
-        setId(userData?.id);
+        setLoggedEmail(responses.data?.email);
+        setId(responses.data?.id);
 
         navigate(from, { replace: true });
-        imageFetch(userData?.email);
       })
       .catch((err) => console.log(err));
   };

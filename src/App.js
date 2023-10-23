@@ -12,7 +12,7 @@ import axios from "axios";
 import OwnerProfile from "./Components/OwnerProfile/OwnerProfile";
 import OwnerProfileUpdate from "./Components/OwnerProfileUpdate/OwnerProfileUpdate";
 import RequireAuth from "./Components/utils/RequireAuth/RequireAuth";
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import CreateParking from "./Components/CreateParking/CreateParking";
 import ParkingList from "./Components/ParkingList/ParkingList";
 import { UserLoginRegisterContextProvider } from "./Components/Context/UserLoginRegisterContext";
@@ -22,7 +22,7 @@ import UserProfile from "./Components/userProfile/UserProfile";
 import UserProfileUpdate from "./Components/UserProfileUpdate/UserProfileUpdate";
 
 function App() {
-  axios.defaults.baseURL = "https://parking-app-server-side.onrender.com/";
+  axios.defaults.baseURL = "http://localhost:8080/";
 
   return (
     <div>
@@ -34,11 +34,9 @@ function App() {
         <Route
           path="/"
           element={
-            <UserLoginRegisterContextProvider>
-              <LoginRegisterContextProvider>
-                <Homepage />
-              </LoginRegisterContextProvider>
-            </UserLoginRegisterContextProvider>
+            <LoginRegisterContextProvider>
+              <Homepage />
+            </LoginRegisterContextProvider>
           }
         ></Route>
         <Route

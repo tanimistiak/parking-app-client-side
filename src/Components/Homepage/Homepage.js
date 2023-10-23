@@ -1,9 +1,11 @@
 import React from "react";
+import parkingFetch from "../utils/Hooks/useParking";
+import AllParking from "../AllParking/AllParking";
 
 const Homepage = () => {
   return (
-    <div>
-      <p className="text-3xl">Hello I Am home</p>
+    <div className="container m-auto">
+      <AllParking></AllParking>
     </div>
   );
 };

@@ -8,8 +8,7 @@ import { LoginRegisterContext } from "../Context/LoginRegisterContext";
 import { fromLatLng, geocode, setKey } from "react-geocode";
 
 const CreateParking = () => {
-  let { ip, setIp } = useIp();
-  const { email } = useContext(LoginRegisterContext);
+  const { email, location, setLocation } = useContext(LoginRegisterContext);
   const [ipDetails, setIpDetails] = useState(null);
   const [address, setAddress] = useState("");
   // const [loading, setLoading] = useState(true);
@@ -22,41 +21,45 @@ const CreateParking = () => {
   } = useForm();
 
   useEffect(() => {
-    const getIpDetails = async (ip) => {
-      // console.log(ipDetails);
-      ip = ip?.split(",")[0];
-      if (ip) {
-        await axios
-          .get(`https://ipinfo.io/${ip}/json`)
-          .then((res) => {
-            setIpDetails(res.data);
-            setKey("AIzaSyBO8vP9zG-H0Cncs8Qucad9howK_CQyJf4");
-            console.log(ipDetails);
-            fromLatLng(
-              res.data?.loc?.split(",")[0],
-              res.data?.loc?.split(",")[1]
-            )
-              .then(({ results }) => {
-                console.log(
-                  results,
-                  ipDetails,
-                  ipDetails?.loc?.split(",")[0],
-                  ipDetails?.loc?.split(",")[1]
-                );
-                const { lat, lng } = results[0].geometry.location;
-                setAddress(results[0]);
-                // console.log(lat, lng);
-              })
-              .catch((error) => {
-                console.error("Error fetching address:", error);
-              });
-          })
-          .catch((err) => console.log(err));
+    // console.log(ipDetails);
+    const getLocation = async () => {
+      if ("geolocation" in navigator) {
+        try {
+          const position = await new Promise((resolve, reject) => {
+            if ("geolocation" in navigator) {
+              navigator.geolocation.getCurrentPosition(resolve, reject);
+            } else {
+              reject(
+                new Error("Geolocation is not available in this browser.")
+              );
+            }
+          });
+          const { latitude, longitude } = position.coords;
+          setLocation({ latitude, longitude });
+          console.log(location);
+        } catch (err) {
+          console.log(err.message);
+        }
       }
+      console.log(location);
     };
-    getIpDetails(ip);
-  }, [ip]);
-
+    getLocation();
+  }, []);
+  useEffect(() => {
+    if (location) {
+      setKey("AIzaSyBO8vP9zG-H0Cncs8Qucad9howK_CQyJf4");
+      fromLatLng(location?.latitude, location?.longitude)
+        .then(({ results }) => {
+          console.log(location);
+          const { lat, lng } = results[0].geometry.location;
+          setAddress(results[0]);
+          // console.log(lat, lng);
+        })
+        .catch((error) => {
+          console.error("Error fetching address:", error);
+        });
+    }
+  }, [location]);
   console.log(address);
   const onSubmit = async (data) => {
     const duration = [];
@@ -75,7 +78,6 @@ const CreateParking = () => {
         parkingLocation: data.parkingLocation,
         parkingSlotName: data.parkingSlotName,
         duration: duration,
-        ip: ip,
         city: data.city,
         country: data.country,
         postCode: data.postCode,
@@ -90,7 +92,8 @@ const CreateParking = () => {
   return (
     <>
       <OwnerProfileDashboardHeader />
-      <div className="create-parking-form flex justify-center">
+      {
+        address && <div className="create-parking-form flex justify-center">
         <form onSubmit={handleSubmit(onSubmit)}>
           <input
             className="w-80 border border-black mb-5 mt-5 p-3"
@@ -100,12 +103,12 @@ const CreateParking = () => {
           <br />
           <input
             className="w-80 border border-black mb-5 mt-5 p-3"
-            defaultValue={ipDetails?.city}
+            defaultValue={address?.address_components[3]?.long_name}
             {...register("city", { required: true })}
           />{" "}
           <br />
           <input
-            defaultValue={ipDetails?.country}
+            defaultValue={address?.address_components[6]?.long_name}
             className="w-80 border border-black mb-5 p-3"
             {...register("country", { required: true })}
           />
@@ -117,7 +120,7 @@ const CreateParking = () => {
           />
           <br />
           <input
-            defaultValue={ipDetails?.postal}
+            defaultValue={address?.address_components[7]?.long_name}
             type="number"
             className="w-80 border border-black mb-5 p-3"
             {...register("postCode", { required: true })}
@@ -154,6 +157,7 @@ const CreateParking = () => {
           <input className="w-80 border border-black mb-5 p-3" type="submit" />
         </form>
       </div>
+      }
     </>
   );
 };
