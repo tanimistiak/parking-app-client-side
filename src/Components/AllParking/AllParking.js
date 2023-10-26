@@ -1,9 +1,10 @@
 import React from "react";
 import parkingFetch from "../utils/Hooks/useParking";
+import { Link, useNavigate } from "react-router-dom";
 
 const AllParking = () => {
   const { parking } = parkingFetch();
-
+  const navigate = useNavigate();
   return (
     <div className="grid grid-cols-3 gap-3 my-5">
       {parking?.map((parking) => {
@@ -19,9 +20,11 @@ const AllParking = () => {
             </p>
             <p>Status:{parking?.status}</p>
             <p>{parking?.city}</p>
-            <button className="button border rounded-md px-10 my-2">
-              View
-            </button>
+            <Link to={`/view-parking/${parking?._id}`}>
+              <button className="button border rounded-md px-10 my-2">
+                View
+              </button>
+            </Link>
           </div>
         );
       })}

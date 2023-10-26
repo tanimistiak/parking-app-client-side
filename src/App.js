@@ -20,6 +20,7 @@ import UserRequireAuth from "./Components/utils/RequireAuth/UserRequireAuth";
 import UserLoginRegister from "./Components/UserLoginRegister/UserLoginRegister";
 import UserProfile from "./Components/userProfile/UserProfile";
 import UserProfileUpdate from "./Components/UserProfileUpdate/UserProfileUpdate";
+import SingleParking from "./Components/SingleParking/SingleParking";
 
 function App() {
   axios.defaults.baseURL = "http://localhost:8080/";
@@ -115,6 +116,9 @@ function App() {
             </UserLoginRegisterContextProvider>
           }
         ></Route>
+
+        {/* parking route */}
+        <Route path="/view-parking/:id" element={<SingleParking />}></Route>
       </Routes>
     </div>
   );
