@@ -23,7 +23,7 @@ import UserProfileUpdate from "./Components/UserProfileUpdate/UserProfileUpdate"
 import SingleParking from "./Components/SingleParking/SingleParking";
 
 function App() {
-  axios.defaults.baseURL = "http://localhost:8080/";
+  axios.defaults.baseURL = "https://parking-app-server-side.onrender.com/";
 
   return (
     <div>
