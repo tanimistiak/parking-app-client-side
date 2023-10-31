@@ -21,9 +21,10 @@ import UserLoginRegister from "./Components/UserLoginRegister/UserLoginRegister"
 import UserProfile from "./Components/userProfile/UserProfile";
 import UserProfileUpdate from "./Components/UserProfileUpdate/UserProfileUpdate";
 import SingleParking from "./Components/SingleParking/SingleParking";
+import BookParking from "./Components/BookParking/BookParking";
 
 function App() {
-  axios.defaults.baseURL = "https://parking-app-server-side.onrender.com/";
+  axios.defaults.baseURL = "http://localhost:8080/";
 
   return (
     <div>
@@ -119,6 +120,7 @@ function App() {
 
         {/* parking route */}
         <Route path="/view-parking/:id" element={<SingleParking />}></Route>
+        <Route path="/view-parking/book/:id" element={<BookParking />}></Route>
       </Routes>
     </div>
   );

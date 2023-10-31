@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 import React, { useContext, useEffect, useState } from "react";
 import OwnerProfileDashboardHeader from "../OwnerProfileDashboardHeader/OwnerProfileDashboardHeader";
 import useIp from "../utils/Hooks/useIp";
@@ -19,9 +20,23 @@ const CreateParking = () => {
     control,
     formState: { errors },
   } = useForm();
-
+  /*   const [ip, setIp] = useState();
   useEffect(() => {
-    // console.log(ipDetails);
+    const fetchIp = async () => {
+      await axios
+        .get("/")
+        .then((res) => setIp(res.data.ip))
+        .catch((err) => console.log(err));
+    };
+    fetchIp();
+  }, []);
+  useEffect(() => {
+    const fetchIpDetails= async()=>{
+      await axios.get('')
+    }
+  }, [ip]); */
+  useEffect(() => {
+    // console.log(ipDetails)
     const getLocation = async () => {
       if ("geolocation" in navigator) {
         try {
@@ -52,8 +67,9 @@ const CreateParking = () => {
         .then(({ results }) => {
           console.log(location);
           const { lat, lng } = results[0].geometry.location;
-          setAddress(results[0]);
+          setAddress(results[1]);
           // console.log(lat, lng);
+          console.log(results);
         })
         .catch((error) => {
           console.error("Error fetching address:", error);
@@ -92,72 +108,77 @@ const CreateParking = () => {
   return (
     <>
       <OwnerProfileDashboardHeader />
-      {
-        address && <div className="create-parking-form flex justify-center">
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <input
-            className="w-80 border border-black mb-5 mt-5 p-3"
-            placeholder="Parking slot name"
-            {...register("parkingSlotName", { required: true })}
-          />{" "}
-          <br />
-          <input
-            className="w-80 border border-black mb-5 mt-5 p-3"
-            defaultValue={address?.address_components[3]?.long_name}
-            {...register("city", { required: true })}
-          />{" "}
-          <br />
-          <input
-            defaultValue={address?.address_components[6]?.long_name}
-            className="w-80 border border-black mb-5 p-3"
-            {...register("country", { required: true })}
-          />
-          <br />
-          <input
-            defaultValue={address?.formatted_address}
-            className="w-80 border border-black mb-5 p-3"
-            {...register("parkingLocation", { required: true })}
-          />
-          <br />
-          <input
-            defaultValue={address?.address_components[7]?.long_name}
-            type="number"
-            className="w-80 border border-black mb-5 p-3"
-            {...register("postCode", { required: true })}
-          />
-          <br />
-          <label className="mr-2">Select Duration</label>
-          <label>
-            <Controller
-              name="minutes"
-              control={control}
-              // rules={{ required: true }}
-              render={({ field }) => <input type="checkbox" {...field} />}
+      {address && (
+        <div className="create-parking-form flex justify-center">
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <input
+              className="w-80 border border-black mb-5 mt-5 p-3"
+              placeholder="Parking slot name"
+              {...register("parkingSlotName", { required: true })}
+            />{" "}
+            <br />
+            <input
+              className="w-80 border border-black mb-5 mt-5 p-3"
+              defaultValue={address?.address_components[3]?.long_name}
+              {...register("city", { required: true })}
+            />{" "}
+            <br />
+            <input
+              defaultValue={address?.formatted_address.split(",")[2]}
+              readOnly
+              className="w-80 border border-black mb-5 p-3"
+              {...register("country", { required: true })}
             />
-            Minutes
-          </label>
-          <label className="mx-2">
-            <Controller
-              name="hours"
-              control={control}
-              render={({ field }) => <input type="checkbox" {...field} />}
+            <br />
+            <input
+              defaultValue={address?.formatted_address}
+              readOnly
+              className="w-80 border border-black mb-5 p-3"
+              {...register("parkingLocation", { required: true })}
             />
-            Hours
-          </label>
-          <label className="mx-2">
-            <Controller
-              name="days"
-              control={control}
-              render={({ field }) => <input type="checkbox" {...field} />}
+            <br />
+            <input
+              placeholder="input postcode"
+              type="text"
+              className="w-80 border border-black mb-5 p-3"
+              {...register("postCode", { required: true })}
             />
-            Days
-          </label>
-          <br />
-          {errors.exampleRequired && <span>This field is required</span>}
-          <input className="w-80 border border-black mb-5 p-3" type="submit" />
-        </form>
-      </div>
-      }
+            <br />
+            <label className="mr-2">Select Duration</label>
+            <label>
+              <Controller
+                name="minutes"
+                control={control}
+                // rules={{ required: true }}
+                render={({ field }) => <input type="checkbox" {...field} />}
+              />
+              Minutes
+            </label>
+            <label className="mx-2">
+              <Controller
+                name="hours"
+                control={control}
+                render={({ field }) => <input type="checkbox" {...field} />}
+              />
+              Hours
+            </label>
+            <label className="mx-2">
+              <Controller
+                name="days"
+                control={control}
+                render={({ field }) => <input type="checkbox" {...field} />}
+              />
+              Days
+            </label>
+            <br />
+            {errors.exampleRequired && <span>This field is required</span>}
+            <input
+              className="w-80 border border-black mb-5 p-3"
+              type="submit"
+            />
+          </form>
+        </div>
+      )}
     </>
   );
 };

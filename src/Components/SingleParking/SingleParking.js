@@ -3,7 +3,7 @@ import React from "react";
 import { useState } from "react";
 import { useEffect } from "react";
 import { fromLatLng, setKey } from "react-geocode";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import DirectionsMap from "../DirectionsMap/DirectionsMap";
 
 const SingleParking = () => {
@@ -65,6 +65,26 @@ const SingleParking = () => {
   console.log(parkingData);
   return (
     <div>
+      <p className="text-3xl text-center my-5">Parking Details</p>
+      <div className="details text-center text-xl my-2">
+        <div className="slot">
+          <p>Slot: {parkingData?.parkingSlotName}</p>
+        </div>
+        <div className="location">
+          <p>Location:{parkingData?.parkingLocation}</p>
+        </div>
+        <div className="postcode">
+          <p>Postcode:{parkingData?.postCode}</p>
+        </div>
+        <div className="country mb-3">
+          <p>Country:{parkingData?.country}</p>
+        </div>
+        <div className="book bg-blue-500 inline px-2 py-1">
+          <Link to={`/view-parking/book/${parkingData?._id}`}>
+            <button>Book</button>
+          </Link>
+        </div>
+      </div>
       <DirectionsMap
         apikey="AIzaSyBv4tnbV1KhqnQmaRGrge5gMrWLzgblWpU"
         origin={address?.formatted_address}
