@@ -120,7 +120,14 @@ function App() {
 
         {/* parking route */}
         <Route path="/view-parking/:id" element={<SingleParking />}></Route>
-        <Route path="/view-parking/book/:id" element={<BookParking />}></Route>
+        <Route
+          path="/view-parking/book/:id"
+          element={
+            <UserLoginRegisterContextProvider>
+              <BookParking />
+            </UserLoginRegisterContextProvider>
+          }
+        ></Route>
       </Routes>
     </div>
   );
