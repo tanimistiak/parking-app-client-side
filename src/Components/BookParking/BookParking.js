@@ -8,7 +8,7 @@ import { UserLoginRegisterContext } from "../Context/UserLoginRegisterContext";
 function BookParking() {
   const { id } = useParams();
   const { email } = useContext(UserLoginRegisterContext);
-  console.log(email);
+  // console.log(email);
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
   const [minStartTime, setMinStartTime] = useState("");
@@ -16,6 +16,7 @@ function BookParking() {
   const [maxStartTime, setMaxStartTime] = useState("");
   const [maxEndTime, setMaxEndTime] = useState("");
   const [parkingData, setParkingData] = useState("");
+
   useEffect(() => {
     const now = moment().startOf("hour").format("YYYY-MM-DDTHH:mm");
     setMinStartTime(now);
@@ -33,6 +34,12 @@ function BookParking() {
     };
     fetchSingleParkingDetails();
   }, [id]);
+  useEffect(() => {
+    const fetchBookingDetails = async () => {
+      await axios.get(`/api/v1/booking`).then((data) => console.log(data.data));
+    };
+    fetchBookingDetails();
+  }, []);
   const handleStartTimeChange = (e) => {
     const selectedStartTime = e.target.value;
 
@@ -92,6 +99,7 @@ function BookParking() {
         startTime: startTime,
         endTime: endTime,
         email: email,
+        method: "hour",
       });
 
       console.log(response.data);
@@ -120,7 +128,47 @@ function BookParking() {
       setDay(false);
     }
   };
+  const [durationMinutes, setDurationMinutes] = useState(1);
 
+  const handleDurationChange = (e) => {
+    setDurationMinutes(Number(e.target.value));
+  };
+
+  const handleMinuteSubmit = async (e) => {
+    e.preventDefault();
+
+    // Your logic to check for overlapping bookings and make the API call
+    // (using axios to send a POST request to your Express server)
+
+    try {
+      const response = await axios.post("api/v1/booking", {
+        parkingId: id,
+        durationMinutes: durationMinutes,
+        email: email,
+        method: "minute",
+      });
+      console.log(response);
+    } catch (error) {
+      console.error("Error:", error.message);
+    }
+  };
+  const [formData, setFormData] = useState({
+    selectedDate: '',
+  });
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
+  };
+
+  const handleDaySubmit = (e) => {
+    e.preventDefault();
+    console.log('Form submitted with date:', formData.selectedDate);
+    // Add your logic to handle the form submission, such as making an API request
+  };
   return (
     <div className="App">
       <h1>Parking System</h1>
@@ -159,6 +207,42 @@ function BookParking() {
           <button type="submit">Book Parking</button>
         </form>
       )}
+      {/* minute */}
+      {minute && (
+        <form onSubmit={handleMinuteSubmit}>
+          <label htmlFor="duration">Select Duration (minutes):</label>
+          <input
+            type="number"
+            id="duration"
+            value={durationMinutes}
+            onChange={handleDurationChange}
+            min="1"
+            max="59"
+            required
+          />
+
+          <button type="submit">Book Time Slot</button>
+        </form>
+      )}
+      {day && (
+         <div>
+         <h1>Date Booking</h1>
+         <form onSubmit={handleDaySubmit}>
+           <label htmlFor="selectedDate">Select Date:</label>
+           <input
+             type="date"
+             id="selectedDate"
+             name="selectedDate"
+             value={formData.selectedDate}
+             onChange={handleInputChange}
+             min={new Date().toISOString().split('T')[0]} // Disable previous dates
+             required
+           />
+           <button type="submit">Book Date</button>
+         </form>
+       </div>
+      )}
+      
     </div>
   );
 }

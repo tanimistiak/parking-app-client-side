@@ -137,7 +137,7 @@ const UserLoginRegister = () => {
                     onChange={handleFile}
                     type="file"
                     className="border-black border-2 mt-5 w-72 p-3"
-                    required={true}
+                    // required={true}
                     name="file"
                     id="file"
                     accept=".jpg"
