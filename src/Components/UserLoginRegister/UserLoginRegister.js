@@ -24,6 +24,8 @@ const UserLoginRegister = () => {
     setImage,
     imageLoading,
     setImageLoading,
+    setLogin,
+    login,
   } = useContext(UserLoginRegisterContext);
   let from = location.state?.from?.pathname || "";
 
@@ -78,6 +80,7 @@ const UserLoginRegister = () => {
   };
   const handleLogin = async (event) => {
     event.preventDefault();
+    await setLogin(!login);
     await axios
       .post(
         "api/v1/publicUsers/login",
@@ -91,9 +94,18 @@ const UserLoginRegister = () => {
         console.log(res);
         setLoggedEmail(res.data?.email);
         setId(res.data?.id);
+        if (res.data?.email && res.data?.id) {
+          const user = {
+            email: res.data?.email,
+            id: res.data?.id,
+          };
+          localStorage.setItem("user", JSON.stringify(user));
+        }
+        setLogin(!login);
         navigate(from, { replace: true });
       })
-      .catch((err) => console.log(err));
+      .catch((err) => console.log(err))
+      .finally(() => setLogin(!login));
   };
   if (loggedEmail) {
     navigate("/userprofile");

@@ -42,7 +42,7 @@ function App() {
           }
         ></Route>
         <Route
-          path="/loginregister"
+          path="/login-register"
           element={
             <LoginRegisterContextProvider>
               <LoginRegister></LoginRegister>
@@ -90,7 +90,7 @@ function App() {
           }
         ></Route>
         <Route
-          path="/userloginregister"
+          path="/user-login-register"
           element={
             <UserLoginRegisterContextProvider>
               <UserLoginRegister></UserLoginRegister>

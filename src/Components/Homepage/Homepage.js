@@ -1,11 +1,15 @@
 import React from "react";
-import parkingFetch from "../utils/Hooks/useParking";
-import AllParking from "../AllParking/AllParking";
+
+import HomepageSection1 from "./HomepageSection1/HomepageSection1";
+import HomepageSection2 from "./HomepageSection2/HomepageSection2";
+import HomepageSection3 from "./HomepageSection3/HomepageSection3";
 
 const Homepage = () => {
   return (
     <div className="container m-auto">
-      <AllParking></AllParking>
+      <HomepageSection1 />
+      <HomepageSection2 />
+      <HomepageSection3 />
     </div>
   );
 };

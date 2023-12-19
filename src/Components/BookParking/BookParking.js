@@ -152,21 +152,26 @@ function BookParking() {
       console.error("Error:", error.message);
     }
   };
-  const [formData, setFormData] = useState({
-    selectedDate: '',
-  });
+  const [formData, setFormData] = useState();
 
   const handleInputChange = (e) => {
-    const { name, value } = e.target;
+    console.log(e.target.value);
     setFormData({
-      ...formData,
-      [name]: value,
+      parkingId: id,
+      email: email,
+      method: "day",
+      date: e.target.value,
     });
   };
 
-  const handleDaySubmit = (e) => {
+  const handleDaySubmit = async (e) => {
     e.preventDefault();
-    console.log('Form submitted with date:', formData.selectedDate);
+    try {
+      const response = await axios.post("api/v1/booking", formData);
+      console.log(response);
+    } catch (error) {
+      console.error("Error:", error.message);
+    }
     // Add your logic to handle the form submission, such as making an API request
   };
   return (
@@ -225,24 +230,22 @@ function BookParking() {
         </form>
       )}
       {day && (
-         <div>
-         <h1>Date Booking</h1>
-         <form onSubmit={handleDaySubmit}>
-           <label htmlFor="selectedDate">Select Date:</label>
-           <input
-             type="date"
-             id="selectedDate"
-             name="selectedDate"
-             value={formData.selectedDate}
-             onChange={handleInputChange}
-             min={new Date().toISOString().split('T')[0]} // Disable previous dates
-             required
-           />
-           <button type="submit">Book Date</button>
-         </form>
-       </div>
+        <div>
+          <h1>Date Booking</h1>
+          <form onSubmit={handleDaySubmit}>
+            <label htmlFor="selectedDate">Select Date:</label>
+            <input
+              type="date"
+              id="selectedDate"
+              name="selectedDate"
+              onChange={handleInputChange}
+              min={new Date().toISOString().split("T")[0]} // Disable previous dates
+              required
+            />
+            <button type="submit">Book Date</button>
+          </form>
+        </div>
       )}
-      
     </div>
   );
 }

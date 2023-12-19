@@ -7,10 +7,17 @@ import { UserLoginRegisterContext } from "../Context/UserLoginRegisterContext";
 import UserProfileDashboardHeader from "../UserProfileDashboardHeader/UserProfileDashboardHeader";
 
 const UserProfile = () => {
-  const { email, location, setLocation } = useContext(UserLoginRegisterContext);
+  const { email, location, setLocation, setEmail, setId } = useContext(
+    UserLoginRegisterContext
+  );
   const indexOfEmail = email.indexOf("@");
   console.log(indexOfEmail);
   const userName = email?.slice(0, indexOfEmail);
+  useEffect(() => {
+    const user = localStorage.getItem("user");
+    setEmail(JSON.parse(user).email);
+    setId(JSON.parse(user).id);
+  }, [localStorage.getItem("user")]);
   useEffect(() => {
     if ("geolocation" in navigator) {
       // Get the user's current location
