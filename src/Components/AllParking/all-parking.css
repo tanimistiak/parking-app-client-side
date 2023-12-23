@@ -1,0 +1,43 @@
+.card {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background-color: #f0f0f0;
+  transition: box-shadow 0.3s ease-in-out;
+  cursor: pointer;
+}
+
+.card:hover {
+  box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+.border-effect::before,
+.border-effect::after {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 5px;
+  background-color: #3498db;
+  transition: transform 0.3s ease-in-out;
+}
+
+.border-effect::before {
+  top: 0;
+  transform-origin: top left;
+  transform: scaleX(0);
+}
+
+.border-effect::after {
+  bottom: 0;
+  transform-origin: bottom right;
+  transform: scaleX(0);
+}
+
+.card:hover .border-effect::before {
+  transform: scaleX(1);
+}
+
+.card:hover .border-effect::after {
+  transform: scaleX(1);
+}

@@ -1,46 +1,35 @@
-import React, { useContext, useEffect } from "react";
-// import { LoginRegisterContext } from "../Context/LoginRegisterContext";
-
-import OwnerProfileDashboardHeader from "../OwnerProfileDashboardHeader/OwnerProfileDashboardHeader";
-// import UserLoginRegister from "../UserLoginRegister/UserLoginRegister";
-import { UserLoginRegisterContext } from "../Context/UserLoginRegisterContext";
+import axios from "axios";
+import { useEffect, useState } from "react";
+import UserLogin from "../UserLoginRegister/UserLogin";
 import UserProfileDashboardHeader from "../UserProfileDashboardHeader/UserProfileDashboardHeader";
+import auth from "../../firebase.config";
+import { useAuthState } from "react-firebase-hooks/auth";
+import AllParking from "../AllParking/AllParking";
 
 const UserProfile = () => {
-  const { email, location, setLocation, setEmail, setId } = useContext(
-    UserLoginRegisterContext
-  );
-  const indexOfEmail = email.indexOf("@");
-  console.log(indexOfEmail);
-  const userName = email?.slice(0, indexOfEmail);
+  const [user, loading, error] = useAuthState(auth);
+  const [allUsers, setAllUsers] = useState([]);
+
   useEffect(() => {
-    const user = localStorage.getItem("user");
-    setEmail(JSON.parse(user).email);
-    setId(JSON.parse(user).id);
-  }, [localStorage.getItem("user")]);
-  useEffect(() => {
-    if ("geolocation" in navigator) {
-      // Get the user's current location
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          // Extract latitude and longitude from the position object
-          const { latitude, longitude } = position.coords;
-          console.log(latitude, longitude);
-          setLocation({ latitude, longitude });
-        },
-        (error) => {
-          // setError(error.message);
-          console.log(error.message);
-        }
-      );
-    } else {
-      console.log("not available");
-    }
+    axios.get(`/api/v1/user/all-users/${user?.email}`).then((data) => {
+      setAllUsers(data.data);
+    });
   }, []);
+
   return (
     <>
-      <UserProfileDashboardHeader></UserProfileDashboardHeader>
-      <p>Hi {userName} How are you today?</p>
+      {!allUsers.length ? (
+        <UserLogin></UserLogin>
+      ) : (
+        <div>
+          <UserProfileDashboardHeader></UserProfileDashboardHeader>
+
+          {/* Additional content based on allUsers data... */}
+          <div className=" flex justify-center">
+            <AllParking />
+          </div>
+        </div>
+      )}
     </>
   );
 };

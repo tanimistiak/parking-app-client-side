@@ -20,7 +20,7 @@ export function UserLoginRegisterContextProvider({ children }) {
   useEffect(() => {
     const fetchUser = async () => {
       await axios
-        .get("/api/v1/publicUsers/userprofile", { withCredentials: true })
+        .get("/api/v1/user/userprofile", { withCredentials: true })
         .then((res) => {
           console.log(res);
           setEmail(res.data.email);

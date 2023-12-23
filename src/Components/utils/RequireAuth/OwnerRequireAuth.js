@@ -8,22 +8,20 @@ import {
   unstable_HistoryRouter,
   useLocation,
 } from "react-router-dom";
+import { useAuthState } from "react-firebase-hooks/auth";
+import auth from "../../../firebase.config";
 
-const RequireAuth = ({ children }) => {
-  const { email, loading } = useContext(LoginRegisterContext);
-
-  console.log(email);
-  console.log(children.props);
+const OwnerRequireAuth = ({ children }) => {
+  const [user, loading, error] = useAuthState(auth);
 
   let location = useLocation();
-  console.log(loading);
   if (loading) {
     return <div>Loading...</div>;
   }
-  if (!email) {
-    return <Navigate to="/loginregister" state={{ from: location }} replace />;
+  if (!user) {
+    return <Navigate to="/owner-login" state={{ from: location }} replace />;
   }
   return children;
 };
 
-export default RequireAuth;
+export default OwnerRequireAuth;

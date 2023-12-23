@@ -1,9 +1,29 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
+import { useAuthState } from "react-firebase-hooks/auth";
+import auth from "../../firebase.config";
+import axios from "axios";
 
 const Header = () => {
   const [isMenuOpen, setMenuOpen] = useState(false);
+  const [user, loading, error] = useAuthState(auth);
+  const [ownerDetails, setOwnerDetails] = useState();
+  const [userDetails, setUserDetails] = useState();
+  useEffect(() => {
+    const fetch = async () => {
+      await axios
+        .get(`/api/v1/owner/all-owners/${user?.email}`)
+        .then((data) => setOwnerDetails(data.data))
+        .catch((err) => console.log(err));
+      /* await axios
+        .get(`/api/v1/owner/all-owners/${user?.email}`)
+        .then((data) => setOwnerDetails(data.data))
+        .catch((err) => console.log(err)); */
+    };
+
+    fetch();
+  }, [user]);
 
   const toggleMenu = () => {
     setMenuOpen(!isMenuOpen);
@@ -67,7 +87,7 @@ const Header = () => {
             className="relative mx-4 cursor-pointer"
           >
             <Link
-              to="/login-register"
+              to="/owner-login"
               className="text-black hover:bg-green-500 hover:text-white px-4 py-2 rounded-full"
             >
               Parking Space Create
@@ -86,7 +106,7 @@ const Header = () => {
             className="relative mx-4 cursor-pointer"
           >
             <Link
-              to="/user-login-register"
+              to="/user-login"
               className="text-black hover:bg-green-500 hover:text-white px-4 py-2 rounded-full"
             >
               User Dashboard

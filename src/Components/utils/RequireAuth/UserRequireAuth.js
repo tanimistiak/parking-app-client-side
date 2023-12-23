@@ -1,27 +1,25 @@
 import React, { useContext } from "react";
-import { LoginRegisterContextProvider } from "../../Context/LoginRegisterContext";
+import {
+  LoginRegisterContext,
+  LoginRegisterContextProvider,
+} from "../../Context/LoginRegisterContext";
 import {
   Navigate,
   unstable_HistoryRouter,
   useLocation,
 } from "react-router-dom";
-import { UserLoginRegisterContext } from "../../Context/UserLoginRegisterContext";
+import { useAuthState } from "react-firebase-hooks/auth";
+import auth from "../../../firebase.config";
 
 const UserRequireAuth = ({ children }) => {
-  const { email, loading } = useContext(UserLoginRegisterContext);
-
-  console.log(email);
-  console.log(children.props);
+  const [user, loading, error] = useAuthState(auth);
 
   let location = useLocation();
-  console.log(loading);
   if (loading) {
     return <div>Loading...</div>;
   }
-  if (!email) {
-    return (
-      <Navigate to="/userloginregister" state={{ from: location }} replace />
-    );
+  if (!user) {
+    return <Navigate to="/user-login" state={{ from: location }} replace />;
   }
   return children;
 };

@@ -11,7 +11,7 @@ const publicUserFetch = (id) => {
     const userFetch = async (userId) => {
       console.log(userId);
       await axios
-        .get(`/api/v1/publicUsers/all-users/${userId}`)
+        .get(`/api/v1/user/all-users/${userId}`)
         .then((res) => setName(res.data))
         .catch((err) => console.log(err))
         .finally();

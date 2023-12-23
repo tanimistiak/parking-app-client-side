@@ -7,16 +7,7 @@ const userFetch = (id) => {
   // console.log(id);
   const userId = id;
   // console.log(userId);
-  useEffect(() => {
-    const userFetch = async (userId) => {
-      console.log(userId);
-      await axios
-        .get(`/api/v1/user/all-owners/${userId}`)
-        .then((res) => setName(res.data))
-        .catch((err) => console.log(err));
-    };
-    userFetch(userId);
-  }, []);
+  
   return { name, setName };
 };
 

@@ -3,7 +3,7 @@ import "./App.css";
 import Homepage from "./Components/Homepage/Homepage";
 import Menu from "./Components/Menu/Menu";
 import { Route, Routes } from "react-router-dom";
-import LoginRegister from "./Components/Login/LoginRegister";
+import LoginRegister from "./Components/OwnerLoginRegister/OwnerRegister";
 import {
   LoginRegisterContext,
   LoginRegisterContextProvider,
@@ -11,26 +11,29 @@ import {
 import axios from "axios";
 import OwnerProfile from "./Components/OwnerProfile/OwnerProfile";
 import OwnerProfileUpdate from "./Components/OwnerProfileUpdate/OwnerProfileUpdate";
-import RequireAuth from "./Components/utils/RequireAuth/RequireAuth";
+import RequireAuth from "./Components/utils/RequireAuth/OwnerRequireAuth";
 import { useContext, useEffect, useState } from "react";
 import CreateParking from "./Components/CreateParking/CreateParking";
 import ParkingList from "./Components/ParkingList/ParkingList";
 import { UserLoginRegisterContextProvider } from "./Components/Context/UserLoginRegisterContext";
 import UserRequireAuth from "./Components/utils/RequireAuth/UserRequireAuth";
-import UserLoginRegister from "./Components/UserLoginRegister/UserLoginRegister";
+import UserLoginRegister from "./Components/UserLoginRegister/UserLogin";
 import UserProfile from "./Components/userProfile/UserProfile";
 import UserProfileUpdate from "./Components/UserProfileUpdate/UserProfileUpdate";
 import SingleParking from "./Components/SingleParking/SingleParking";
 import BookParking from "./Components/BookParking/BookParking";
+import OwnerRegister from "./Components/OwnerLoginRegister/OwnerRegister";
+import OwnerLogin from "./Components/OwnerLoginRegister/OwnerLogin";
+import OwnerRequireAuth from "./Components/utils/RequireAuth/OwnerRequireAuth";
+import UserLogin from "./Components/UserLoginRegister/UserLogin";
+import UserRegister from "./Components/UserLoginRegister/UserRegister";
 
 function App() {
   axios.defaults.baseURL = "http://localhost:8080/";
 
   return (
     <div>
-      <UserLoginRegisterContextProvider>
-        <Menu></Menu>
-      </UserLoginRegisterContextProvider>
+      <Menu></Menu>
 
       <Routes>
         <Route
@@ -41,22 +44,17 @@ function App() {
             </LoginRegisterContextProvider>
           }
         ></Route>
+        <Route path="/owner-login" element={<OwnerLogin></OwnerLogin>}></Route>
         <Route
-          path="/login-register"
-          element={
-            <LoginRegisterContextProvider>
-              <LoginRegister></LoginRegister>
-            </LoginRegisterContextProvider>
-          }
+          path="/owner-register"
+          element={<OwnerRegister></OwnerRegister>}
         ></Route>
         <Route
-          path="/ownerprofile"
+          path="/owner-profile"
           element={
-            <LoginRegisterContextProvider>
-              <RequireAuth>
-                <OwnerProfile></OwnerProfile>
-              </RequireAuth>
-            </LoginRegisterContextProvider>
+            <OwnerRequireAuth>
+              <OwnerProfile></OwnerProfile>
+            </OwnerRequireAuth>
           }
         ></Route>
         <Route
@@ -89,22 +87,17 @@ function App() {
             </LoginRegisterContextProvider>
           }
         ></Route>
+        <Route path="/user-login" element={<UserLogin></UserLogin>}></Route>
         <Route
-          path="/user-login-register"
-          element={
-            <UserLoginRegisterContextProvider>
-              <UserLoginRegister></UserLoginRegister>
-            </UserLoginRegisterContextProvider>
-          }
+          path="/user-register"
+          element={<UserRegister></UserRegister>}
         ></Route>
         <Route
-          path="/userprofile"
+          path="/user-profile"
           element={
-            <UserLoginRegisterContextProvider>
-              <UserRequireAuth>
-                <UserProfile></UserProfile>
-              </UserRequireAuth>
-            </UserLoginRegisterContextProvider>
+            <UserRequireAuth>
+              <UserProfile></UserProfile>
+            </UserRequireAuth>
           }
         ></Route>
         <Route
