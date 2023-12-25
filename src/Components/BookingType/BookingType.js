@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from "react";
-import parkingFetch from "../utils/Hooks/useParking";
-import { Link, useNavigate } from "react-router-dom";
-import "./all-parking.css";
 import axios from "axios";
-const AllParking = () => {
+import React, { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import UserProfileDashboardHeader from "../UserProfileDashboardHeader/UserProfileDashboardHeader";
+
+const BookingType = () => {
   const [parking, setParking] = useState();
+  const [tempParking, setTempParking] = useState();
   const navigate = useNavigate();
   const [location, setLocation] = useState();
   useEffect(() => {
@@ -13,26 +14,61 @@ const AllParking = () => {
       .then((data) => {
         console.log(data.data);
         setParking(data.data);
+        setTempParking(data.data);
       })
       .catch((err) => console.log(err));
   }, [location]);
+  const handleHour = () => {
+    const hour = tempParking.filter((parking) =>
+      parking.duration.includes("hours")
+    );
+    setParking(hour);
+  };
+  const handleMinute = () => {
+    const minute = tempParking.filter((parking) =>
+      parking.duration.includes("minutes")
+    );
+    setParking(minute);
+  };
+  const handleDay = () => {
+    const day = tempParking.filter((parking) =>
+      parking.duration.includes("days")
+    );
+    setParking(day);
+  };
+  const handleAll = () => {
+    setParking(tempParking);
+  };
   return (
     <div>
-      {/* <div className="mb-4">
-        <label
-          htmlFor="parkingSlotLocation"
-          className="block text-gray-700 font-bold mb-2"
+      <UserProfileDashboardHeader></UserProfileDashboardHeader>
+
+      <div className="flex justify-center gap-20 my-5">
+        <button
+          onClick={handleAll}
+          className="bg-slate-300 p-5 hover:cursor-pointer rounded-3xl"
         >
-          Search By Location
-        </label>
-        <input
-          type="text"
-          id="parkingSlotLocation"
-          name="parkingSlotLocation"
-          onChange={(e) => setLocation(e.target.value)}
-          className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-        />
-      </div> */}
+          All
+        </button>
+        <button
+          onClick={handleHour}
+          className="bg-slate-300 p-5 hover:cursor-pointer rounded-3xl"
+        >
+          Hours
+        </button>
+        <button
+          onClick={handleMinute}
+          className="bg-slate-300 p-5 hover:cursor-pointer rounded-3xl"
+        >
+          Minutes
+        </button>
+        <button
+          onClick={handleDay}
+          className="bg-slate-300 p-5 hover:cursor-pointer rounded-3xl"
+        >
+          Days
+        </button>
+      </div>
       <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4   py-5">
         {parking?.map((parking) => {
           return (
@@ -54,16 +90,19 @@ const AllParking = () => {
                   </p>
                   <span className="text-gray-700">City: {parking?.city}</span>
 
-                  {/* <p>
+                  <p>
                     Booking System:
-                    {parking?.duration.map((duration) => {
+                    {parking?.duration.map((duration, index) => {
                       return (
-                        <span class="inline-flex items-center px-3 py-1 text-sm font-medium text-white bg-green-500 rounded-full mx-3">
+                        <span
+                          key={index}
+                          class="inline-flex items-center px-3 py-1 text-sm font-medium text-white bg-green-500 rounded-full mx-3"
+                        >
                           {duration}
                         </span>
                       );
                     })}
-                  </p> */}
+                  </p>
                   <span class="inline-flex items-center px-3 py-1 ml-4 text-sm font-medium text-white bg-blue-500 rounded-full">
                     Status:{parking?.status}
                   </span>
@@ -82,4 +121,4 @@ const AllParking = () => {
   );
 };
 
-export default AllParking;
+export default BookingType;

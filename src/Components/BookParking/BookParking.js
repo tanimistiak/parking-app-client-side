@@ -4,10 +4,14 @@ import moment from "moment";
 import { useParams } from "react-router-dom";
 import { useContext } from "react";
 import { UserLoginRegisterContext } from "../Context/UserLoginRegisterContext";
+import { useAuthState } from "react-firebase-hooks/auth";
+import auth from "../../firebase.config";
+import { ToastContainer, toast } from "react-toastify";
 
 function BookParking() {
   const { id } = useParams();
-  const { email } = useContext(UserLoginRegisterContext);
+  const [user] = useAuthState(auth);
+  const { email } = user;
   // console.log(email);
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
@@ -101,7 +105,12 @@ function BookParking() {
         email: email,
         method: "hour",
       });
-
+      if (response.data.message) {
+        toast(`booking done`);
+      }
+      if (response.data.error) {
+        toast(`booking already exists by someone`);
+      }
       console.log(response.data);
     } catch (error) {
       console.error("Error:", error.message);
@@ -147,7 +156,12 @@ function BookParking() {
         email: email,
         method: "minute",
       });
-      console.log(response);
+      if (response.data.message) {
+        toast(`booking done`);
+      }
+      if (response.data.error) {
+        toast(`booking already exists by someone`);
+      }
     } catch (error) {
       console.error("Error:", error.message);
     }
@@ -169,6 +183,12 @@ function BookParking() {
     try {
       const response = await axios.post("api/v1/booking", formData);
       console.log(response);
+      if (response.data.message) {
+        toast(`booking done`);
+      }
+      if (response.data.error) {
+        toast(`booking already exists by someone`);
+      }
     } catch (error) {
       console.error("Error:", error.message);
     }
@@ -186,66 +206,123 @@ function BookParking() {
         </button>
       ))}
       {hour && (
-        <form onSubmit={handleSubmit}>
-          <label htmlFor="startTime">Start Time:</label>
-          <input
-            type="datetime-local"
-            id="startTime"
-            value={startTime}
-            onChange={handleStartTimeChange}
-            min={minStartTime}
-            max={maxStartTime}
-            required
-          />
+        <div className="bg-gray-100 p-4 rounded-lg shadow-md">
+          <h2 className="text-xl font-bold mb-4">Parking Details</h2>
 
-          <label htmlFor="endTime">End Time:</label>
-          <input
-            type="datetime-local"
-            id="endTime"
-            value={endTime}
-            onChange={handleEndTimeChange}
-            min={minEndTime}
-            max={maxStartTime}
-            required
-          />
+          <form className="grid grid-cols-2 gap-4" onSubmit={handleSubmit}>
+            <div className="col-span-1">
+              <label
+                htmlFor="startTime"
+                className="block text-gray-700 font-bold mb-2"
+              >
+                Start Time:
+              </label>
+              <input
+                type="datetime-local"
+                id="startTime"
+                value={startTime}
+                onChange={handleStartTimeChange}
+                min={minStartTime}
+                max={maxStartTime}
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                required
+              />
+            </div>
+            <div className="col-span-1">
+              <label
+                htmlFor="endTime"
+                className="block text-gray-700 font-bold mb-2"
+              >
+                End Time:
+              </label>
+              <input
+                type="datetime-local"
+                id="endTime"
+                value={endTime}
+                onChange={handleEndTimeChange}
+                min={minEndTime}
+                max={maxStartTime}
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                required
+              />
 
-          <button type="submit">Book Parking</button>
-        </form>
-      )}
-      {/* minute */}
-      {minute && (
-        <form onSubmit={handleMinuteSubmit}>
-          <label htmlFor="duration">Select Duration (minutes):</label>
-          <input
-            type="number"
-            id="duration"
-            value={durationMinutes}
-            onChange={handleDurationChange}
-            min="1"
-            max="59"
-            required
-          />
-
-          <button type="submit">Book Time Slot</button>
-        </form>
-      )}
-      {day && (
-        <div>
-          <h1>Date Booking</h1>
-          <form onSubmit={handleDaySubmit}>
-            <label htmlFor="selectedDate">Select Date:</label>
-            <input
-              type="date"
-              id="selectedDate"
-              name="selectedDate"
-              onChange={handleInputChange}
-              min={new Date().toISOString().split("T")[0]} // Disable previous dates
-              required
-            />
-            <button type="submit">Book Date</button>
+              <button
+                className="bg-blue-500 text-white px-4 py-2 rounded font-bold mt-4 hover:bg-blue-700"
+                type="submit"
+              >
+                Book Parking
+              </button>
+            </div>
           </form>
         </div>
       )}
+      {/* minute */}
+      {minute && (
+        <div className="bg-gray-100 p-4 rounded-lg shadow-md">
+          <h2 className="text-xl font-bold mb-4">Parking Details</h2>
+          <form
+            className="grid grid-cols-2 gap-4"
+            onSubmit={handleMinuteSubmit}
+          >
+            <div className="col-span-1">
+              <label
+                className="block text-gray-700 font-bold mb-2"
+                htmlFor="duration"
+              >
+                Select Duration (minutes):
+              </label>
+              <input
+                type="number"
+                id="duration"
+                value={durationMinutes}
+                onChange={handleDurationChange}
+                min="1"
+                max="59"
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                required
+              />
+            </div>
+            <button
+              className="bg-blue-500 text-white px-4 py-2 rounded font-bold mt-4 hover:bg-blue-700"
+              type="submit"
+            >
+              Book Time Slot
+            </button>
+          </form>
+        </div>
+      )}
+      {day && (
+        <div className="bg-gray-100 p-4 rounded-lg shadow-md">
+          <h2 className="text-xl font-bold mb-4">Parking Details</h2>
+          <h1>Date Booking</h1>
+          <form className="grid grid-cols-2 gap-4" onSubmit={handleDaySubmit}>
+            <div className="col-span-1">
+              <label
+                className="block text-gray-700 font-bold mb-2"
+                htmlFor="selectedDate"
+              >
+                Select Date:
+              </label>
+              <input
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                type="date"
+                id="selectedDate"
+                name="selectedDate"
+                onChange={handleInputChange}
+                min={new Date().toISOString().split("T")[0]} // Disable previous dates
+                required
+              />
+              <button
+                className="bg-blue-500 text-white px-4 py-2 rounded font-bold mt-4 hover:bg-blue-700"
+                type="submit"
+              >
+                Book Date
+              </button>
+            </div>
+          </form>
+        </div>
+      )}
+      <ToastContainer />
     </div>
   );
 }

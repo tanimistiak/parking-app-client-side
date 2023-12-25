@@ -5,6 +5,7 @@ import UserProfileDashboardHeader from "../UserProfileDashboardHeader/UserProfil
 import auth from "../../firebase.config";
 import { useAuthState } from "react-firebase-hooks/auth";
 import AllParking from "../AllParking/AllParking";
+import ParkingAvailablityCheckHeader from "../UserProfileDashboardHeader/ParkingAvailablityCheckHeader";
 
 const UserProfile = () => {
   const [user, loading, error] = useAuthState(auth);
@@ -23,7 +24,7 @@ const UserProfile = () => {
       ) : (
         <div>
           <UserProfileDashboardHeader></UserProfileDashboardHeader>
-
+          <ParkingAvailablityCheckHeader></ParkingAvailablityCheckHeader>
           {/* Additional content based on allUsers data... */}
           <div className=" flex justify-center">
             <AllParking />

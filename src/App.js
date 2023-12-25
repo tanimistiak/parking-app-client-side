@@ -27,6 +27,9 @@ import OwnerLogin from "./Components/OwnerLoginRegister/OwnerLogin";
 import OwnerRequireAuth from "./Components/utils/RequireAuth/OwnerRequireAuth";
 import UserLogin from "./Components/UserLoginRegister/UserLogin";
 import UserRegister from "./Components/UserLoginRegister/UserRegister";
+import TotalAvailableParkingSlots from "./Components/TotalAvailableParkingSlots/TotalAvailableParkingSlots";
+import LocationBasedSearch from "./Components/LocationBasedSearch/LocationBasedSearch";
+import BookingType from "./Components/BookingType/BookingType";
 
 function App() {
   axios.defaults.baseURL = "http://localhost:8080/";
@@ -43,6 +46,18 @@ function App() {
               <Homepage />
             </LoginRegisterContextProvider>
           }
+        ></Route>
+        <Route
+          path="/total-available-parking"
+          element={<TotalAvailableParkingSlots></TotalAvailableParkingSlots>}
+        ></Route>
+        <Route
+          path="/location-based-search"
+          element={<LocationBasedSearch></LocationBasedSearch>}
+        ></Route>
+        <Route
+          path="/booking-types"
+          element={<BookingType></BookingType>}
         ></Route>
         <Route path="/owner-login" element={<OwnerLogin></OwnerLogin>}></Route>
         <Route

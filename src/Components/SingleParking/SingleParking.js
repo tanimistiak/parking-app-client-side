@@ -5,6 +5,7 @@ import { useEffect } from "react";
 import { fromLatLng, setKey } from "react-geocode";
 import { Link, useParams } from "react-router-dom";
 import DirectionsMap from "../DirectionsMap/DirectionsMap";
+import UserProfileDashboardHeader from "../UserProfileDashboardHeader/UserProfileDashboardHeader";
 
 const SingleParking = () => {
   const { id } = useParams();
@@ -65,6 +66,7 @@ const SingleParking = () => {
   console.log(parkingData);
   return (
     <div>
+      <UserProfileDashboardHeader></UserProfileDashboardHeader>
       <p className="text-3xl text-center my-5">Parking Details</p>
       <div className="details text-center text-xl my-2">
         <div className="slot">

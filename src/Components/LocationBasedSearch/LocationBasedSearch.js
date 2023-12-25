@@ -3,7 +3,9 @@ import parkingFetch from "../utils/Hooks/useParking";
 import { Link, useNavigate } from "react-router-dom";
 import "./all-parking.css";
 import axios from "axios";
-const AllParking = () => {
+import UserProfileDashboardHeader from "../UserProfileDashboardHeader/UserProfileDashboardHeader";
+import ParkingAvailablityCheckHeader from "../UserProfileDashboardHeader/ParkingAvailablityCheckHeader";
+const LocationBasedSearch = () => {
   const [parking, setParking] = useState();
   const navigate = useNavigate();
   const [location, setLocation] = useState();
@@ -18,7 +20,9 @@ const AllParking = () => {
   }, [location]);
   return (
     <div>
-      {/* <div className="mb-4">
+      <UserProfileDashboardHeader></UserProfileDashboardHeader>
+      <ParkingAvailablityCheckHeader></ParkingAvailablityCheckHeader>
+      <div className="mb-4">
         <label
           htmlFor="parkingSlotLocation"
           className="block text-gray-700 font-bold mb-2"
@@ -30,9 +34,12 @@ const AllParking = () => {
           id="parkingSlotLocation"
           name="parkingSlotLocation"
           onChange={(e) => setLocation(e.target.value)}
+          // defaultValue={address?.formatted_address.split(",")[2]}
+
+          // {...register("country", { required: true })}
           className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
         />
-      </div> */}
+      </div>
       <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4   py-5">
         {parking?.map((parking) => {
           return (
@@ -54,7 +61,7 @@ const AllParking = () => {
                   </p>
                   <span className="text-gray-700">City: {parking?.city}</span>
 
-                  {/* <p>
+                  <p>
                     Booking System:
                     {parking?.duration.map((duration) => {
                       return (
@@ -63,7 +70,7 @@ const AllParking = () => {
                         </span>
                       );
                     })}
-                  </p> */}
+                  </p>
                   <span class="inline-flex items-center px-3 py-1 ml-4 text-sm font-medium text-white bg-blue-500 rounded-full">
                     Status:{parking?.status}
                   </span>
@@ -82,4 +89,4 @@ const AllParking = () => {
   );
 };
 
-export default AllParking;
+export default LocationBasedSearch;
