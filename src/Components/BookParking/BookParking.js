@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import moment from "moment";
+import "./BookParking.css";
 import { useParams } from "react-router-dom";
-import { useContext } from "react";
-import { UserLoginRegisterContext } from "../Context/UserLoginRegisterContext";
+
 import { useAuthState } from "react-firebase-hooks/auth";
 import auth from "../../firebase.config";
 import { ToastContainer, toast } from "react-toastify";
@@ -72,7 +72,7 @@ function BookParking() {
       setEndTime(maxEnd);
     }
   };
-
+  const slots = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
   const handleEndTimeChange = (e) => {
     const selectedEndTime = e.target.value;
 
@@ -85,37 +85,40 @@ function BookParking() {
       setEndTime(selectedEndTime);
     }
   };
-
+  const [bookingSlotStatus, setBookingSlotStatus] = useState([]);
+  const [selectSlot, setSelectSlot] = useState(false);
+  const [slotName, setSlotName] = useState(null);
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+    setSlotName(null);
     const isValidDifference =
       moment(endTime).diff(moment(startTime), "minutes") % 60 === 0;
 
     if (!isValidDifference) {
       console.error("Please select whole hours for both start and end times.");
+      toast("select whole hour");
       return;
     }
     try {
-      console.log(startTime, endTime);
-      const response = await axios.post("api/v1/booking", {
-        parkingId: id,
-        startTime: startTime,
-        endTime: endTime,
-        email: email,
-        method: "hour",
-      });
-      if (response.data.message) {
-        toast(`booking done`);
-      }
-      if (response.data.error) {
-        toast(`booking already exists by someone`);
-      }
-      console.log(response.data);
+      await axios
+        .post("api/v1/booking", {
+          parkingId: id,
+          startTime: startTime,
+          endTime: endTime,
+          email: email,
+          method: "hour",
+          slotName: 4,
+        })
+        .then((data) => {
+          setBookingSlotStatus(data.data);
+        })
+        .catch((err) => console.log(err));
+      setSelectSlot(true);
     } catch (error) {
       console.error("Error:", error.message);
     }
   };
+  console.log(bookingSlotStatus);
   const [hour, setHour] = useState(false);
   const [day, setDay] = useState(false);
   const [minute, setMinute] = useState(false);
@@ -194,8 +197,42 @@ function BookParking() {
     }
     // Add your logic to handle the form submission, such as making an API request
   };
+  const handleBooking = async () => {
+    await axios
+      .post("api/v1/booking/create-booking", {
+        parkingId: id,
+        startTime: startTime,
+        endTime: endTime,
+        email: email,
+        method: "hour",
+        slotName: slotName,
+      })
+      .then(async (data) => {
+        if (data.data?.message) {
+          setSlotName(null);
+
+          await axios
+            .post("api/v1/booking", {
+              parkingId: id,
+              startTime: startTime,
+              endTime: endTime,
+              email: email,
+              method: "hour",
+              slotName: 4,
+            })
+            .then((data) => {
+              setBookingSlotStatus(data.data);
+            })
+            .catch((err) => console.log(err));
+          toast(data.data?.message);
+        }
+        if (data.data?.error) {
+          toast(data.data?.error);
+        }
+      });
+  };
   return (
-    <div className="App">
+    <div>
       <h1>Parking System</h1>
       {parkingData?.duration?.map((parking) => (
         <button
@@ -250,7 +287,7 @@ function BookParking() {
                 className="bg-blue-500 text-white px-4 py-2 rounded font-bold mt-4 hover:bg-blue-700"
                 type="submit"
               >
-                Book Parking
+                Check availablity
               </button>
             </div>
           </form>
@@ -320,6 +357,39 @@ function BookParking() {
               </button>
             </div>
           </form>
+        </div>
+      )}
+      {selectSlot && (
+        <div className="grid grid-cols-2 my-5 gap-5">
+          {slots?.map((slot) => {
+            const isBooked = bookingSlotStatus.some(
+              (obj) => obj.slotName == slot
+            );
+            return (
+              <div
+                onClick={() => {
+                  if (!isBooked) {
+                    setSlotName(slot);
+                  }
+                }}
+                className={`${
+                  isBooked ? "bg-red-600" : "bg-green-600"
+                } p-5 text-center slot-selection ${
+                  !isBooked && "hover:cursor-pointer"
+                } ${slotName == slot && "bg-yellow-600"}`}
+              >
+                Slot {slot}
+              </div>
+            );
+          })}
+        </div>
+      )}
+      {slotName && (
+        <div
+          onClick={handleBooking}
+          className="text-center p-5 bg-blue-600  hover:cursor-pointer"
+        >
+          Book Now
         </div>
       )}
       <ToastContainer />

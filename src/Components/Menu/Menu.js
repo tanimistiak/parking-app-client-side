@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { useAuthState } from "react-firebase-hooks/auth";
+import logo from "../../assets/homepage-image/infini-p@3x.png";
 import auth from "../../firebase.config";
 import axios from "axios";
 
@@ -56,8 +57,8 @@ const Header = () => {
     <header className="bg-white text-black py-7 border-b-4 border-gray-700">
       <div className="container mx-auto flex items-center justify-between">
         {/* Left Section - Logo */}
-        <div className="flex items-center">
-          <img src="/path/to/logo.png" alt="Logo" className="mr-4" />
+        <div className="flex items-center w-20">
+          <img src={logo} alt="Logo" className="mr-4 w-100" />
         </div>
 
         {/* Middle Section - Menu Items */}
