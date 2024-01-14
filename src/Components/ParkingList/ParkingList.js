@@ -15,6 +15,20 @@ const ParkingList = () => {
       .then((res) => setParkingList(res.data))
       .catch((err) => console.log(err));
   }, []);
+  const [bookSlot, setBookSlot] = useState(null);
+  const [noBooking, setNoBooking] = useState();
+  const handleBookingFind = async (id) => {
+    await axios
+      .get(`/api/v1/booking/${id}`)
+      .then((data) => {
+        if (data.data.length > 0) {
+          setBookSlot(data.data);
+        } else {
+          setNoBooking("No booking for this slot");
+        }
+      })
+      .catch((err) => console.log(err));
+  };
   return (
     <div className="bg-gray-200">
       <OwnerProfileDashboardHeader></OwnerProfileDashboardHeader>
@@ -46,7 +60,21 @@ const ParkingList = () => {
                     <span>{parking},</span>
                   ))}
                 </td>
-                <td className="border">{parking?.status}</td>
+                <td className="border">
+                  <button onClick={() => handleBookingFind(parking._id)}>
+                    See bookings
+                  </button>
+                  {bookSlot?.length > 0 &&
+                    bookSlot.map(
+                      (book) =>
+                        book.parkingId == parking._id && (
+                          <p className="mb-2 bg-gray-200">
+                            {book.startTime}-{book.endTime} at Slot{" "}
+                            {book.slotName}
+                          </p>
+                        )
+                    )}
+                </td>
               </tr>
             ))}
           </tbody>

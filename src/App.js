@@ -30,6 +30,7 @@ import UserRegister from "./Components/UserLoginRegister/UserRegister";
 import TotalAvailableParkingSlots from "./Components/TotalAvailableParkingSlots/TotalAvailableParkingSlots";
 import LocationBasedSearch from "./Components/LocationBasedSearch/LocationBasedSearch";
 import BookingType from "./Components/BookingType/BookingType";
+import ZoneWiseParkingSlots from "./Components/ZoneWiseParkingSlots/ZoneWiseParkingSlots";
 
 function App() {
   axios.defaults.baseURL = "http://localhost:8080/";
@@ -127,6 +128,10 @@ function App() {
         ></Route>
 
         {/* parking route */}
+        <Route
+          path="/zone-wise-parking/:zoneName"
+          element={<ZoneWiseParkingSlots />}
+        ></Route>
         <Route path="/view-parking/:id" element={<SingleParking />}></Route>
         <Route
           path="/view-parking/book/:id"

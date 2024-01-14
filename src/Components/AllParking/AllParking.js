@@ -3,7 +3,7 @@ import parkingFetch from "../utils/Hooks/useParking";
 import { Link, useNavigate } from "react-router-dom";
 import "./all-parking.css";
 import axios from "axios";
-const AllParking = () => {
+const AllParking = ({ filtered }) => {
   const [parking, setParking] = useState();
   const navigate = useNavigate();
   const [location, setLocation] = useState();
@@ -34,7 +34,7 @@ const AllParking = () => {
         />
       </div> */}
       <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4   py-5">
-        {parking?.map((parking) => {
+        {filtered?.map((parking) => {
           return (
             <div key={parking._id} class="card">
               <div class="border-effect"></div>
@@ -50,7 +50,7 @@ const AllParking = () => {
                     Slot Name: {parking?.parkingSlotName}
                   </h5>
                   <p className="text-gray-700">
-                    Slot Location: {parking?.parkingLocation}
+                    Slot house number: {parking?.houseNumber}
                   </p>
                   <span className="text-gray-700">City: {parking?.city}</span>
 

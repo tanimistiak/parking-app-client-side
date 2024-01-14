@@ -98,6 +98,8 @@ const CreateParking = () => {
       parkingSlotName: data.parkingSlotName,
       duration: duration,
       city: data.city,
+      zoneName:data.zoneName,
+      houseNumber: data.houseNumber,
       country: data.country,
       postCode: data.postCode,
       createdBy: user?.email,
@@ -218,6 +220,38 @@ const CreateParking = () => {
                 placeholder="Your postcode"
                 name="parkingSlotPostCode"
                 {...register("postCode", { required: true })}
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              />
+            </div>
+            <div className="mb-4">
+              <label
+                htmlFor="parkingSlotZoneName"
+                className="block text-gray-700 font-bold mb-2"
+              >
+                Parking Slot Zone Name
+              </label>
+              <input
+                type="text"
+                id="parkingSlotZoneName"
+                placeholder="Your zone name"
+                name="parkingSlotZoneName"
+                {...register("zoneName", { required: true })}
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              />
+            </div>
+            <div className="mb-4">
+              <label
+                htmlFor="parkingSlotHouseNumber"
+                className="block text-gray-700 font-bold mb-2"
+              >
+                House number
+              </label>
+              <input
+                type="text"
+                id="parkingSlotHouseNumber"
+                placeholder="Your house number"
+                name="parkingSlotHouseNumber"
+                {...register("houseNumber", { required: true })}
                 className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               />
             </div>
